@@ -19,14 +19,18 @@ public class Tutorial {
 	@Column(name = "published")
 	private boolean published;
 
+	@Column(name = "price")
+	private int price;
+
 	public Tutorial() {
 
 	}
 
-	public Tutorial(String title, String description, boolean published) {
+	public Tutorial(String title, String description, boolean published, int price) {
 		this.title = title;
 		this.description = description;
 		this.published = published;
+		this.price = price;
 	}
 
 	public long getId() {
@@ -59,9 +63,17 @@ public class Tutorial {
 		this.published = isPublished;
 	}
 
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
 	@Override
 	public String toString() {
-		return "Tutorial [id=" + id + ", title=" + title + ", desc=" + description + ", published=" + published + "]";
+		return "Tutorial [id=" + id + ", title=" + title + ", desc=" + description + ", published=" + published + "price=" +price+"]";
 	}
 
 }
