@@ -122,4 +122,6 @@ public class TutorialController {
 		}
 	}
 
+	@DeleteMapping("/tutorials")
+
 }
