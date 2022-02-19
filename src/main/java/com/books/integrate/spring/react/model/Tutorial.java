@@ -20,13 +20,13 @@ public class Tutorial {
 	private boolean published;
 
 	@Column(name = "price")
-	private int price;
+	private long price;
 
 	public Tutorial() {
 
 	}
 
-	public Tutorial(String title, String description, boolean published, int price) {
+	public Tutorial(String title, String description, boolean published, long price) {
 		this.title = title;
 		this.description = description;
 		this.published = published;
@@ -63,11 +63,11 @@ public class Tutorial {
 		this.published = isPublished;
 	}
 
-	public int getPrice() {
+	public long getPrice() {
 		return price;
 	}
 
-	public void setPrice(int price) {
+	public void setPrice(long price) {
 		this.price = price;
 	}
 

@@ -89,16 +89,7 @@ public class TutorialController {
         }
     }
 
-	@DeleteMapping("/tutorials")
-	public ResponseEntity<HttpStatus> deleteAllTutorials() {
-		try {
-			tutorialRepository.deleteAll();
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-		}
 
-	}
 
     @GetMapping("/tutorials/published")
     public ResponseEntity<List<Tutorial>> findByPublished() {
@@ -114,25 +105,62 @@ public class TutorialController {
         }
     }
 
-
+    //borrado por titulo
     @DeleteMapping(value = "/tutorials", params = "title")
     public ResponseEntity<String> deleteTutorialByTitle(@RequestParam(value = "title") String title) {
         List<Tutorial> tutorials = tutorialRepository.findByTitleContaining(title);
-           try {
+        try {
             tutorials.forEach(tutorial -> tutorialRepository.deleteById(tutorial.getId()));
-               return new ResponseEntity<>("Tutorial Eliminao papa!!!! ",HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Tutorial Eliminao papa!!!! ", HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
     }
 
-    /*@GetMapping("/tutorials/price/{id}")
-    public int getPriceById(@PathVariable("id") Long id){
-        Optional<Tutorial> tutorialData = tutorialRepository.findById(id);
-        if (tutorialData.isPresent()) {
-            return tutorialData.get().getPrice();
-        } else {
-            return 0;
+    //Consultar por precio
+    @GetMapping("/tutorials/getTutoByPrice/{price}")
+    public ResponseEntity<List<Tutorial>> getTutoByPrice(@PathVariable("price") Long price) {
+        List<Tutorial> tutorialsByPriceData = tutorialRepository.findByPrice(price);
+        try {
+            if (!tutorialsByPriceData.isEmpty()) {
+                return new ResponseEntity<>(tutorialsByPriceData, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }*/
+    }
+
+    //actualizar por titulo
+    @PutMapping("/tutorials/updateByTitle/{title}")
+    public ResponseEntity<Tutorial> updateByTitle(@PathVariable("title") String title, @RequestBody Tutorial tutorial) {
+        List<Tutorial> tutorialsByTitleData = tutorialRepository.findByTitle(title);
+        try {
+            if (!tutorialsByTitleData.isEmpty()) {
+                for (Tutorial tutorials : tutorialsByTitleData) {
+                    tutorials.setTitle(tutorial.getTitle());
+                    tutorials.setDescription(tutorial.getDescription());
+                    tutorials.setPublished(tutorial.isPublished());
+                    tutorials.setPrice(tutorial.getPrice());
+                    tutorialRepository.save(tutorials);
+                }
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @DeleteMapping("/tutorials")
+    public ResponseEntity<HttpStatus> deleteAllTutorials() {
+        try {
+            tutorialRepository.deleteAll();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+
+    }
 }
